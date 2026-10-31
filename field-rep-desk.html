@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Field Rep Desk</title>
 <meta name="description" content="A task and targeting desk built around how field reps actually work. 10-step product tour on sample data, by Leonard Mazzotti.">
 <meta property="og:type" content="website">
@@ -9,7 +14,6 @@
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
@@ -116,7 +120,8 @@ textarea{width:100%;box-sizing:border-box;min-height:110px;border:1px solid var(
 @keyframes f{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.fade{animation:none}.frow .bar i,.prog i{transition:none}}
 </style>
-
+</head>
+<body>
 <div class="wrap">
   <header class="top">
     <div style="display:flex;flex-direction:column;gap:6px">
@@ -241,3 +246,5 @@ const m=(location.hash||"").match(/^#step-(\d+)$/);if(m)S.step=Math.min(STEPS.le
 window.addEventListener("hashchange",()=>{const m=(location.hash||"").match(/^#step-(\d+)$/);if(m){S.step=Math.min(STEPS.length-1,Math.max(0,+m[1]-1));render();}});
 render();
 </script>
+</body>
+</html>
