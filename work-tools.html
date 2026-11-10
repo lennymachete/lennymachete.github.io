@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Work Tools · Submittal Builder and Spec Diagram Builder · Leonard Mazzotti</title>
+<meta name="description" content="Two tools Leonard Mazzotti built for his quoting team: a submittal builder and a spec diagram builder. Working demos on sample products.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Work tools: submittal builder and spec diagram builder">
+<meta property="og:description" content="Quote lines in, finished documents out. Working demos on sample products, by Leonard Mazzotti.">
+<meta property="og:url" content="https://lennymachete.github.io/work-tools.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: same job-site spec sheet as the home page. One column. Each tool is a case block, then a bench: input on top, built document below. */
+:root {
+  --bg: #f3f5f4; --surface: #ffffff; --ink: #18221f; --muted: #56645f; --line: #d4dbd8;
+  --pine: #1f4a3f; --signal: #b8650a; --tint: #e6eeeb; --mark: #fff1a8; --flag: #a3341f; --flag-soft: #fbe9e4;
+  --display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111816; --surface: #18211e; --ink: #e8eeeb; --muted: #9fb0aa; --line: #2c3a35;
+    --pine: #7fc4ad; --signal: #e8a24a; --tint: #1d2a26; --mark: #5a4a12; --flag: #f08a76; --flag-soft: #3a1f1a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111816; --surface: #18211e; --ink: #e8eeeb; --muted: #9fb0aa; --line: #2c3a35;
+  --pine: #7fc4ad; --signal: #e8a24a; --tint: #1d2a26; --mark: #5a4a12; --flag: #f08a76; --flag-soft: #3a1f1a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+.wrap { max-width: 920px; margin: 0 auto; }
+a { color: var(--pine); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, textarea:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+header { padding-block: 40px 24px; border-bottom: 2px solid var(--ink); }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(38px, 8vw, 68px); line-height: .95; margin: 10px 0 14px; letter-spacing: -.01em; text-wrap: balance; }
+h1 span { color: var(--pine); }
+.thesis { font-size: clamp(17px, 2.3vw, 20px); max-width: 62ch; margin: 0; }
+.notice { margin: 18px 0 0; padding: 12px 16px; border-left: 4px solid var(--signal); background: var(--surface); font-size: 14.5px; max-width: 70ch; }
+
+section { padding-block: 36px 8px; }
+h2 { font-family: var(--display); font-weight: 600; font-size: 30px; letter-spacing: .02em; text-transform: uppercase; margin: 0 0 6px; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 64ch; margin: 0 0 18px; }
+
+.figs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); background: var(--surface); margin-bottom: 14px; }
+.figs div { padding: 14px 16px; border-right: 1px solid var(--line); min-width: 0; }
+.figs div:last-child { border-right: 0; }
+.figs b { display: block; font-family: var(--display); font-size: 30px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.figs span { font-size: 13px; color: var(--muted); }
+
+.case { background: var(--surface); border: 1px solid var(--line); padding: 18px; margin-bottom: 14px; }
+.case dl { margin: 0; display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 8px 10px; font-size: 15px; }
+.case dt { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--pine); padding-top: 4px; }
+.case dd { margin: 0; }
+
+.bench { border: 1px solid var(--ink); background: var(--surface); }
+.bench-head { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--tint); }
+.bench-head b { font-family: var(--display); font-size: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; }
+.bench-head span { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--signal); }
+.bench-body { padding: 14px; display: grid; gap: 12px; }
+label { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+textarea { width: 100%; min-height: 132px; font-family: var(--mono); font-size: 13px; line-height: 1.5; padding: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); resize: vertical; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+button { font: inherit; font-size: 14.5px; font-weight: 600; padding: 9px 16px; border: 1px solid var(--pine); background: var(--pine); color: var(--surface); cursor: pointer; }
+button.ghost { background: transparent; color: var(--pine); }
+.status { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+
+.out { display: grid; gap: 12px; }
+.flags { border: 1px solid var(--flag); background: var(--flag-soft); padding: 12px 14px; }
+.flags h4 { margin: 0 0 6px; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--flag); }
+.flags ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
+.flags.ok { border-color: var(--pine); background: var(--tint); }
+.flags.ok h4 { color: var(--pine); }
+
+.sheet { border: 1px solid var(--line); background: var(--surface); }
+.sheet-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px; padding: 10px 14px; border-bottom: 2px solid var(--ink); }
+.sheet-top h3 { margin: 0; font-family: var(--display); font-size: 24px; font-weight: 600; line-height: 1.05; }
+.sheet-top small { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.sheet-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.sheet-meta div { padding: 8px 14px; border-right: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; }
+.sheet-meta div:last-child { border-right: 0; }
+.sheet-meta i { display: block; font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.code { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.code-boxes { display: flex; flex-wrap: wrap; gap: 6px; }
+.code-box { border: 1px solid var(--ink); min-width: 64px; }
+.code-box i { display: block; font-style: normal; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 2px 6px; border-bottom: 1px solid var(--line); }
+.code-box b { display: block; font-family: var(--mono); font-size: 15px; font-weight: 500; padding: 4px 6px; background: var(--mark); font-variant-numeric: tabular-nums; }
+.code-box.bad b { background: var(--flag-soft); color: var(--flag); }
+.opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0; }
+.opt { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0; }
+.opt h5 { margin: 0; padding: 6px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--pine); background: var(--tint); font-weight: 500; }
+.opt table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.opt td { padding: 4px 14px; border-top: 1px solid var(--line); }
+.opt td:first-child { font-family: var(--mono); width: 64px; }
+.opt tr.pick td { background: var(--mark); font-weight: 600; }
+
+.diagram { border: 1px solid var(--line); background: var(--surface); padding: 12px; overflow-x: auto; }
+.diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.diagram svg text { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; fill: var(--ink); }
+.diagram .pn { fill: var(--tint); stroke: var(--ink); stroke-width: 1.5; }
+.diagram .dim { stroke: var(--muted); stroke-width: 1; }
+.diagram .exit { fill: var(--signal); }
+.diagram .tb { fill: none; stroke: var(--ink); stroke-width: 1; }
+
+.how { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: s; }
+.how li { counter-increment: s; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); }
+.how li::before { content: counter(s, decimal-leading-zero); font-family: var(--mono); font-size: 13px; color: var(--signal); padding-top: 3px; }
+.how h4 { margin: 0 0 2px; font-size: 17px; }
+.how p { margin: 0; color: var(--muted); font-size: 15px; }
+
+.back { display: inline-block; margin-top: 28px; font-family: var(--mono); font-size: 13px; }
+
+@media (max-width: 640px) {
+  .figs, .sheet-meta { grid-template-columns: minmax(0, 1fr); }
+  .figs div, .sheet-meta div { border-right: 0; border-bottom: 1px solid var(--line); }
+  .figs div:last-child, .sheet-meta div:last-child { border-bottom: 0; }
+}
+@media print {
+  header .notice, .bench-head, textarea, label, .row, .how, .back, .case, .figs, .lede { display: none; }
+  body { background: #fff; }
+  .sheet, .diagram { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow"><a href="index.html">Leonard Mazzotti</a> · Work tools · 2026</div>
+  <h1>Quote lines in. <span>Finished documents out.</span></h1>
+  <p class="thesis">Two tools I built for my quoting team at Elemental Brands. Both take the lines already sitting in the quote and build the document people used to make by hand. Both are used daily across Quotes, Account Management, and Customer Support.</p>
+  <p class="notice"><b>These are demos.</b> Every product, code, and rule on this page is made up for the demo. No customer, pricing, or company data is here. The real tools hold none either. The tools themselves use no AI. I designed them and used AI to write the code.</p>
+</header>
+
+<section aria-labelledby="h-sub">
+  <h2 id="h-sub">Submittal Builder</h2>
+  <p class="lede">A submittal is the packet a customer gets to approve what they are buying: one spec sheet per product, filled in and marked up to match the quote.</p>
+  <div class="figs">
+    <div><b>~20 min</b><span>for one line by hand, timed</span></div>
+    <div><b>156 pages</b><span>built in about 10 minutes with the tool</span></div>
+    <div><b>82</b><span>product templates, with an SOP</span></div>
+  </div>
+  <div class="case">
+    <dl>
+      <dt>Need</dt><dd>Each line meant finding the right sheet, typing the ordering code into its boxes, and highlighting the matching rows. Long quotes took hours, so submittals only got made when someone asked.</dd>
+      <dt>Built</dt><dd>A browser tool. Paste the quote lines, add the current spec sheets, and it fills each sheet the way the team does by hand, then joins them into one PDF. Shared pages print once per product.</dd>
+      <dt>Check</dt><dd>It flags every place the quote and the spec sheet disagree. It never picks a product or changes a code. A person decides.</dd>
+      <dt>Result</dt><dd>Submittals went from a request to a habit. I now send one on every project.</dd>
+    </dl>
+  </div>
+
+  <div class="bench">
+    <div class="bench-head"><b>Try it</b><span>Sample products only</span></div>
+    <div class="bench-body">
+      <div>
+        <label for="sub-in">Quote lines (code, then description)</label>
+        <textarea id="sub-in" spellcheck="false"></textarea>
+      </div>
+      <div class="row">
+        <button type="button" id="sub-go">Build submittal</button>
+        <button type="button" class="ghost" id="sub-reset">Reset sample</button>
+        <button type="button" class="ghost" id="sub-print">Print</button>
+        <span class="status" id="sub-status" role="status"></span>
+      </div>
+      <div class="out" id="sub-out"></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="h-dia">
+  <h2 id="h-dia">Spec Diagram Builder</h2>
+  <p class="lede">Lit panels are cut to size, so every order needs a drawing: dimensions, how an oversize panel splits, and where the wire leaves.</p>
+  <div class="case">
+    <dl>
+      <dt>Need</dt><dd>Diagrams were drawn one at a time. No two looked the same, and splits were worked out by hand.</dd>
+      <dt>Built</dt><dd>Paste the quote rows and get a uniform diagram: panel size, even splits when a panel is over the limit, the wire exit, and a title block. It comes with an SOP.</dd>
+      <dt>Result</dt><dd>Every diagram is built the same way, whoever makes it.</dd>
+    </dl>
+  </div>
+
+  <div class="bench">
+    <div class="bench-head"><b>Try it</b><span>Sample rules only</span></div>
+    <div class="bench-body">
+      <div>
+        <label for="dia-in">Quote rows (PNL-thickness-width x height-color-exit)</label>
+        <textarea id="dia-in" spellcheck="false" style="min-height:96px"></textarea>
+      </div>
+      <div class="row">
+        <button type="button" id="dia-go">Draw diagrams</button>
+        <button type="button" class="ghost" id="dia-reset">Reset sample</button>
+        <span class="status" id="dia-status" role="status"></span>
+      </div>
+      <div class="out" id="dia-out"></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="h-how">
+  <h2 id="h-how">How I built them</h2>
+  <ol class="how">
+    <li><div><h4>Timed the hand process first</h4><p>One line, start to finish, about 20 minutes. That number is the reason the tool exists.</p></div></li>
+    <li><div><h4>Copied how the team already works</h4><p>The output matches what people made by hand. Nobody had to learn a new format.</p></div></li>
+    <li><div><h4>Kept data out</h4><p>No pricing, no customer names, no job data. Blank fields and sample rows only.</p></div></li>
+    <li><div><h4>Made it flag, not decide</h4><p>When the quote and the sheet disagree, it says so and stops. The person signs off.</p></div></li>
+    <li><div><h4>Wrote the SOP and handed it off</h4><p>Teammates tested it, I fixed what they found, and the SOP stays current with every change.</p></div></li>
+  </ol>
+  <a class="back" href="index.html">Back to portfolio</a>
+</section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Sample catalog (made up for this demo) ---------- */
+  var CATALOG = {
+    NLT: { name: 'Northline Tape Light', sheet: 'NL-100', groups: [
+      { label: 'Color', opts: { '27K': '2700K', '30K': '3000K', '35K': '3500K', '40K': '4000K' } },
+      { label: 'Output', opts: { 'STD': '3.0 W/ft', 'HO': '5.0 W/ft' } },
+      { label: 'Rating', opts: { 'D': 'Dry location', 'W': 'Wet location' } },
+      { label: 'Length', free: /^\d{1,3}FT$/, hint: 'Cut length in feet' }
+    ]},
+    NLC: { name: 'Northline Channel', sheet: 'NL-200', groups: [
+      { label: 'Profile', opts: { 'SL': 'Slim surface', 'RC': 'Recessed', 'CR': 'Corner' } },
+      { label: 'Finish', opts: { 'AL': 'Aluminum', 'BK': 'Black', 'WH': 'White' } },
+      { label: 'Lens', opts: { 'FR': 'Frosted', 'CL': 'Clear' } },
+      { label: 'Length', free: /^\d{1,3}FT$/, hint: 'Cut length in feet' }
+    ]},
+    NLD: { name: 'Northline Driver', sheet: 'NL-300', groups: [
+      { label: 'Watts', opts: { '30': '30 W', '60': '60 W', '96': '96 W' } },
+      { label: 'Dimming', opts: { 'TR': 'Phase dimming', 'ZT': '0-10V dimming' } },
+      { label: 'Rating', opts: { 'D': 'Dry location', 'W': 'Wet location' } }
+    ]}
+  };
+  var SUB_SAMPLE = [
+    'NLT-30K-HO-W-24FT   Tape light, 3000K, high output, wet, 24 ft',
+    'NLC-SL-BK-FR-24FT   Slim channel, black, frosted lens, 24 ft',
+    'NLD-96-ZT-W         Driver, 96 W, 0-10V, wet',
+    'NLT-22K-STD-D-12FT  Tape light, 2200K, standard, dry, 12 ft',
+    'NLC-RC-BZ-CL-12FT   Recessed channel, bronze, clear lens, 12 ft'
+  ].join('\n');
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function parseLine(line) {
+    var m = line.trim().match(/^(\S+)\s*(.*)$/);
+    if (!m) return null;
+    var code = m[1].toUpperCase(), desc = m[2].trim(), parts = code.split('-'), prod = CATALOG[parts[0]];
+    var out = { code: code, desc: desc, product: prod || null, picks: [], flags: [] };
+    if (!prod) { out.flags.push(code + ': no spec sheet template for "' + parts[0] + '".'); return out; }
+    var segs = parts.slice(1);
+    prod.groups.forEach(function (g, i) {
+      var v = segs[i], ok;
+      if (v === undefined) { out.picks.push({ label: g.label, value: '', ok: false }); out.flags.push(code + ': ' + g.label + ' is missing from the code.'); return; }
+      ok = g.opts ? Object.prototype.hasOwnProperty.call(g.opts, v) : g.free.test(v);
+      out.picks.push({ label: g.label, value: v, ok: ok });
+      if (!ok) out.flags.push(code + ': ' + g.label + ' "' + v + '" is not on spec sheet ' + prod.sheet + '.');
+    });
+    if (segs.length > prod.groups.length) out.flags.push(code + ': extra code segment "' + segs.slice(prod.groups.length).join('-') + '" has no place on the sheet.');
+    return out;
+  }
+
+  function sheetHTML(item, n, today) {
+    var p = item.product, h = '';
+    h += '<article class="sheet"><div class="sheet-top"><h3>' + esc(p.name) + '</h3><small>Sample spec sheet ' + esc(p.sheet) + ' · Line ' + n + '</small></div>';
+    h += '<div class="sheet-meta"><div><i>Date</i>' + esc(today) + '</div><div><i>Project</i>XXXXX</div><div><i>Project notes</i>' + esc(item.desc || 'XXXXX') + '</div></div>';
+    h += '<div class="code"><label>Ordering code</label><div class="code-boxes"><div class="code-box"><i>Series</i><b>' + esc(item.code.split('-')[0]) + '</b></div>';
+    item.picks.forEach(function (k) { h += '<div class="code-box' + (k.ok ? '' : ' bad') + '"><i>' + esc(k.label) + '</i><b>' + esc(k.value || '?') + '</b></div>'; });
+    h += '</div></div><div class="opts">';
+    p.groups.forEach(function (g, i) {
+      var pick = item.picks[i] || {};
+      h += '<div class="opt"><h5>' + esc(g.label) + '</h5><table>';
+      if (g.opts) Object.keys(g.opts).forEach(function (k) { h += '<tr' + (pick.ok && pick.value === k ? ' class="pick"' : '') + '><td>' + esc(k) + '</td><td>' + esc(g.opts[k]) + '</td></tr>'; });
+      else h += '<tr' + (pick.ok ? ' class="pick"' : '') + '><td>' + esc(pick.ok ? pick.value : 'nnFT') + '</td><td>' + esc(g.hint) + '</td></tr>';
+      h += '</table></div>';
+    });
+    return h + '</div></article>';
+  }
+
+  function buildSubmittal(text) {
+    var items = text.split('\n').map(function (l) { return l.trim() ? parseLine(l) : null; }).filter(Boolean);
+    var flags = [], h = '', today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }), built = 0;
+    items.forEach(function (it) { flags = flags.concat(it.flags); });
+    if (!items.length) return { html: '', status: 'Paste at least one line.' };
+    h += flags.length
+      ? '<div class="flags"><h4>' + flags.length + ' to check before sending</h4><ul>' + flags.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul></div>'
+      : '<div class="flags ok"><h4>Every line matches its spec sheet</h4></div>';
+    items.forEach(function (it, i) { if (it.product) { h += sheetHTML(it, i + 1, today); built++; } });
+    return { html: h, status: items.length + ' lines read · ' + built + ' sheets filled · ' + flags.length + ' flagged' };
+  }
+
+  /* ---------- Spec diagram (sample rules) ---------- */
+  var MAX = 40; /* sample limit in inches, made up for this demo */
+  var DIA_SAMPLE = ['PNL-4MM-36x24-30K-E3', 'PNL-4MM-96x30-40K-E6', 'PNL-6MM-110x70-30K-E1'].join('\n');
+  var EXITS = { 1: [0, 0, 'top left'], 2: [.5, 0, 'top center'], 3: [1, 0, 'top right'], 4: [1, .5, 'right center'], 5: [1, 1, 'bottom right'], 6: [.5, 1, 'bottom center'], 7: [0, 1, 'bottom left'], 8: [0, .5, 'left center'] };
+
+  function parsePanel(line) {
+    var m = line.trim().toUpperCase().match(/^PNL-(\d+)MM-(\d+(?:\.\d+)?)X(\d+(?:\.\d+)?)-(\d{2}K)-E(\d)$/);
+    if (!m) return { error: line.trim() + ': row not read. Use PNL-4MM-36x24-30K-E3.' };
+    var w = +m[2], hgt = +m[3], ex = +m[5];
+    if (!EXITS[ex]) return { error: line.trim() + ': wire exit must be 1 to 8.' };
+    if (w <= 0 || hgt <= 0 || w > 400 || hgt > 400) return { error: line.trim() + ': size is out of range.' };
+    var nx = Math.ceil(w / MAX), ny = Math.ceil(hgt / MAX);
+    return { code: line.trim().toUpperCase(), thick: m[1] + ' mm', w: w, h: hgt, cct: m[4].replace('K', '00K'), exit: ex, nx: nx, ny: ny, pw: w / nx, ph: hgt / ny };
+  }
+  function r2(n) { return (Math.round(n * 100) / 100).toString(); }
+
+  function panelSVG(p, n) {
+    var W = 460, padL = 58, padT = 44, boxW = W - padL - 24, scale = Math.min(boxW / p.w, 220 / p.h);
+    var dw = p.w * scale, dh = p.h * scale, x0 = padL + (boxW - dw) / 2, y0 = padT, tbY = y0 + dh + 74, H = tbY + 112, s = '', F = 14;
+    var e = EXITS[p.exit], ex = x0 + e[0] * dw, ey = y0 + e[1] * dh, multi = p.nx * p.ny > 1;
+    s += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="Spec diagram for ' + esc(p.code) + '">';
+    for (var j = 0; j < p.ny; j++) for (var i = 0; i < p.nx; i++) {
+      s += '<rect class="pn" x="' + (x0 + i * dw / p.nx) + '" y="' + (y0 + j * dh / p.ny) + '" width="' + dw / p.nx + '" height="' + dh / p.ny + '"/>';
+      if (multi && dw / p.nx > 34 && dh / p.ny > 22) s += '<text x="' + (x0 + (i + .5) * dw / p.nx) + '" y="' + (y0 + (j + .5) * dh / p.ny + 5) + '" text-anchor="middle" font-size="' + F + '">' + String.fromCharCode(65 + j) + (i + 1) + '</text>';
+    }
+    s += '<line class="dim" x1="' + x0 + '" y1="' + (y0 + dh + 16) + '" x2="' + (x0 + dw) + '" y2="' + (y0 + dh + 16) + '"/><line class="dim" x1="' + x0 + '" y1="' + (y0 + dh + 10) + '" x2="' + x0 + '" y2="' + (y0 + dh + 22) + '"/><line class="dim" x1="' + (x0 + dw) + '" y1="' + (y0 + dh + 10) + '" x2="' + (x0 + dw) + '" y2="' + (y0 + dh + 22) + '"/>';
+    s += '<text x="' + (x0 + dw / 2) + '" y="' + (y0 + dh + 36) + '" text-anchor="middle" font-size="' + F + '">' + r2(p.w) + ' in</text>';
+    s += '<line class="dim" x1="' + (x0 - 16) + '" y1="' + y0 + '" x2="' + (x0 - 16) + '" y2="' + (y0 + dh) + '"/><line class="dim" x1="' + (x0 - 22) + '" y1="' + y0 + '" x2="' + (x0 - 10) + '" y2="' + y0 + '"/><line class="dim" x1="' + (x0 - 22) + '" y1="' + (y0 + dh) + '" x2="' + (x0 - 10) + '" y2="' + (y0 + dh) + '"/>';
+    s += '<text x="' + (x0 - 26) + '" y="' + (y0 + dh / 2) + '" text-anchor="middle" font-size="' + F + '" transform="rotate(-90 ' + (x0 - 26) + ' ' + (y0 + dh / 2) + ')">' + r2(p.h) + ' in</text>';
+    s += '<circle class="exit" cx="' + ex + '" cy="' + ey + '" r="7"/>';
+    s += '<text x="' + (W / 2) + '" y="' + (y0 + dh + 58) + '" text-anchor="middle" font-size="' + F + '">Wire exit ' + p.exit + ': ' + esc(e[2]) + '</text>';
+    var rows = [p.code, p.thick + ' · ' + p.cct, multi ? 'Split into ' + (p.nx * p.ny) + ' panels, each ' + r2(p.pw) + ' x ' + r2(p.ph) + ' in' : 'One panel, no split', 'Project: XXXXX · Diagram ' + n];
+    s += '<rect class="tb" x="12" y="' + tbY + '" width="' + (W - 24) + '" height="100"/>';
+    rows.forEach(function (t, k) {
+      if (k) s += '<line class="tb" x1="12" y1="' + (tbY + 25 * k) + '" x2="' + (W - 12) + '" y2="' + (tbY + 25 * k) + '"/>';
+      s += '<text x="22" y="' + (tbY + 25 * k + 17) + '" font-size="13">' + esc(t) + '</text>';
+    });
+    return s + '</svg>';
+  }
+
+  function buildDiagrams(text) {
+    var rows = text.split('\n').filter(function (l) { return l.trim(); }).map(parsePanel);
+    if (!rows.length) return { html: '', status: 'Paste at least one row.' };
+    var errs = rows.filter(function (r) { return r.error; }), good = rows.filter(function (r) { return !r.error; }), h = '';
+    if (errs.length) h += '<div class="flags"><h4>' + errs.length + ' to fix</h4><ul>' + errs.map(function (r) { return '<li>' + esc(r.error) + '</li>'; }).join('') + '</ul></div>';
+    good.forEach(function (p, i) { h += '<div class="diagram">' + panelSVG(p, i + 1) + '</div>'; });
+    var splits = good.filter(function (p) { return p.nx * p.ny > 1; }).length;
+    return { html: h, status: good.length + ' drawn · ' + splits + ' split (sample limit ' + MAX + ' in a side) · ' + errs.length + ' not read' };
+  }
+
+  if (typeof module !== 'undefined' && module.exports) { module.exports = { buildSubmittal: buildSubmittal, buildDiagrams: buildDiagrams, parsePanel: parsePanel, parseLine: parseLine }; return; }
+
+  function wire(prefix, sample, fn) {
+    var input = document.getElementById(prefix + '-in'), out = document.getElementById(prefix + '-out'), status = document.getElementById(prefix + '-status');
+    function run() { var r = fn(input.value); out.innerHTML = r.html; status.textContent = r.status; }
+    input.value = sample;
+    document.getElementById(prefix + '-go').addEventListener('click', run);
+    document.getElementById(prefix + '-reset').addEventListener('click', function () { input.value = sample; run(); });
+    run();
+  }
+  wire('sub', SUB_SAMPLE, buildSubmittal);
+  wire('dia', DIA_SAMPLE, buildDiagrams);
+  document.getElementById('sub-print').addEventListener('click', function () { window.print(); });
+})();
+</script>
+</body>
+</html>
