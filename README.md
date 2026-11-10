@@ -6,6 +6,7 @@ I build systems that get people working. Implementation, AI and onboarding.
 
 ## Projects
 - **[Field Rep Desk](https://lennymachete.github.io/field-rep-desk.html)**: a task and targeting desk built around how field reps actually work. Spreadsheet upload, warm-account ranking, map and day planner, five-second call logging, and AI that turns spoken notes into tasks the rep approves. Six releases from live feedback, now set up for any role. 10-step tour on sample data.
+- **[Work tools](https://lennymachete.github.io/work-tools.html)**: a submittal builder and a spec diagram builder I built for my quoting team. Quote lines in, finished documents out. Used daily across departments. Working demos on sample products, no company or customer data.
 - **[Systems](https://lennymachete.github.io/systems.html)**: how I use AI to build workflows at work and on my own.
 
 ## How I work
