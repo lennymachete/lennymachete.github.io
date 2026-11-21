@@ -130,6 +130,13 @@ button.ghost { background: transparent; color: var(--pine); }
   body { background: #fff; }
   .sheet, .diagram { break-inside: avoid; }
 }
+
+/* Nov 21: plainer type. Sentence case, fewer code-style labels. */
+.eyebrow, h2, .do h3, .ring .tag, .ring h3, .case dt, .bench-head b, .bench-head span, label, .flags h4 { text-transform: none; letter-spacing: 0; }
+.eyebrow, .ring .tag, .case dt, label, .bench-head span, .flags h4 { font-family: var(--body); font-size: 14px; font-weight: 600; }
+h2 { font-size: 30px; }
+.how li::before, .loop li::before { content: none; }
+.how li, .loop li { grid-template-columns: minmax(0, 1fr); }
 </style>
 </head>
 <body>
@@ -139,15 +146,15 @@ button.ghost { background: transparent; color: var(--pine); }
   <div class="eyebrow"><a href="index.html">Leonard Mazzotti</a> · Work tools · 2026</div>
   <h1>Quote lines in. <span>Finished documents out.</span></h1>
   <p class="thesis">Two tools I built for my quoting team at Elemental Brands. Both take the lines already sitting in the quote and build the document people used to make by hand. Both are used daily across Quotes, Account Management, and Customer Support.</p>
-  <p class="notice"><b>These are demos.</b> Every product, code, and rule on this page is made up for the demo. No customer, pricing, or company data is here. The real tools hold none either. The tools themselves use no AI. I designed them and used AI to write the code.</p>
+  <p class="notice"><b>These are demos.</b> Every product, code, and rule on this page is made up for the demo. No customer, pricing, or company data is here. The real tools hold none either. The tools themselves use no AI. I learned each job by doing it by hand, took it apart step by step, designed the tool around how the team already works, and tested every run until it held up. AI wrote most of the code from my direction.</p>
 </header>
 
 <section aria-labelledby="h-sub">
   <h2 id="h-sub">Submittal Builder</h2>
   <p class="lede">A submittal is the packet a customer gets to approve what they are buying: one spec sheet per product, filled in and marked up to match the quote.</p>
   <div class="figs">
-    <div><b>~20 min</b><span>for one line by hand, timed</span></div>
-    <div><b>156 pages</b><span>built in about 10 minutes with the tool</span></div>
+    <div><b>20 to 30 min</b><span>for a 3-line submittal by hand, timed twice</span></div>
+    <div><b>Seconds</b><span>for a 63-page package: paste the lines, check, download</span></div>
     <div><b>82</b><span>product templates, with an SOP</span></div>
   </div>
   <div class="case">
@@ -155,7 +162,7 @@ button.ghost { background: transparent; color: var(--pine); }
       <dt>Need</dt><dd>Each line meant finding the right sheet, typing the ordering code into its boxes, and highlighting the matching rows. Long quotes took hours, so submittals only got made when someone asked.</dd>
       <dt>Built</dt><dd>A browser tool. Paste the quote lines, add the current spec sheets, and it fills each sheet the way the team does by hand, then joins them into one PDF. Shared pages print once per product.</dd>
       <dt>Check</dt><dd>It flags every place the quote and the spec sheet disagree. It never picks a product or changes a code. A person decides.</dd>
-      <dt>Result</dt><dd>Submittals went from a request to a habit. I now send one on every project.</dd>
+      <dt>Result</dt><dd>On a live 4-hour quote, with one hour left in my shift, the tool built the 63-page package in about the time it takes to copy and paste. The client got the quote and the package the same day. By hand, a 3-line submittal took me 20 to 30 minutes, so 63 pages would have slipped to the next day.</dd>
     </dl>
   </div>
 
@@ -184,7 +191,7 @@ button.ghost { background: transparent; color: var(--pine); }
     <dl>
       <dt>Need</dt><dd>Diagrams were drawn one at a time. No two looked the same, and splits were worked out by hand.</dd>
       <dt>Built</dt><dd>Paste the quote rows and get a uniform diagram: panel size, even splits when a panel is over the limit, the wire exit, and a title block. It comes with an SOP.</dd>
-      <dt>Result</dt><dd>Every diagram is built the same way, whoever makes it.</dd>
+      <dt>Result</dt><dd>Every diagram is built the same way, whoever makes it. Teammates started using it, other departments asked for it, and a customer's lighting designer wrote back that the layout was very helpful.</dd>
     </dl>
   </div>
 
@@ -208,12 +215,14 @@ button.ghost { background: transparent; color: var(--pine); }
 <section aria-labelledby="h-how">
   <h2 id="h-how">How I built them</h2>
   <ol class="how">
-    <li><div><h4>Timed the hand process first</h4><p>One line, start to finish, about 20 minutes. That number is the reason the tool exists.</p></div></li>
+    <li><div><h4>Did it by hand, then took it apart</h4><p>My first 3-line submittal took 30 minutes by hand. The next took about 20, once I knew the steps: find the right sheet, type the ordering code into its boxes, highlight the matching rows, merge the PDFs. Once I could see every step, I could build the tool that does them.</p></div></li>
     <li><div><h4>Copied how the team already works</h4><p>The output matches what people made by hand. Nobody had to learn a new format.</p></div></li>
     <li><div><h4>Kept data out</h4><p>No pricing, no customer names, no job data. Blank fields and sample rows only.</p></div></li>
     <li><div><h4>Made it flag, not decide</h4><p>When the quote and the sheet disagree, it says so and stops. The person signs off.</p></div></li>
+    <li><div><h4>Ran it until it broke</h4><p>On a live 63-page run, the tool repeated one image and skipped the lines. I caught it before it went out, fixed it, and reran it clean the same day.</p></div></li>
     <li><div><h4>Wrote the SOP and handed it off</h4><p>Teammates tested it, I fixed what they found, and the SOP stays current with every change.</p></div></li>
   </ol>
+  <p class="lede" style="margin-top:18px"><b>Also in progress, not shown here:</b> tools I'm building with our specials team, a notes and disclosures desk that keeps what we send customers consistent, and a drawing tool. They run on company product data, so they stay inside the company.</p>
   <a class="back" href="index.html">Back to portfolio</a>
 </section>
 
@@ -258,7 +267,7 @@ button.ghost { background: transparent; color: var(--pine); }
     if (!m) return null;
     var code = m[1].toUpperCase(), desc = m[2].trim(), parts = code.split('-'), prod = CATALOG[parts[0]];
     var out = { code: code, desc: desc, product: prod || null, picks: [], flags: [] };
-    if (!prod) { out.flags.push(code + ': no spec sheet template for "' + parts[0] + '".'); return out; }
+    if (!prod) { out.flags.push(code + ': invalid product code "' + parts[0] + '". Sample codes start with NLT, NLC, or NLD.'); return out; }
     var segs = parts.slice(1);
     prod.groups.forEach(function (g, i) {
       var v = segs[i], ok;
@@ -297,7 +306,8 @@ button.ghost { background: transparent; color: var(--pine); }
       ? '<div class="flags"><h4>' + flags.length + ' to check before sending</h4><ul>' + flags.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul></div>'
       : '<div class="flags ok"><h4>Every line matches its spec sheet</h4></div>';
     items.forEach(function (it, i) { if (it.product) { h += sheetHTML(it, i + 1, today); built++; } });
-    return { html: h, status: items.length + ' lines read · ' + built + ' sheets filled · ' + flags.length + ' flagged' };
+    function pl(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+    return { html: h, status: pl(items.length, 'line') + ' read · ' + pl(built, 'sheet') + ' filled · ' + flags.length + ' flagged' };
   }
 
   /* ---------- Spec diagram (sample rules) ---------- */
@@ -307,7 +317,7 @@ button.ghost { background: transparent; color: var(--pine); }
 
   function parsePanel(line) {
     var m = line.trim().toUpperCase().match(/^PNL-(\d+)MM-(\d+(?:\.\d+)?)X(\d+(?:\.\d+)?)-(\d{2}K)-E(\d)$/);
-    if (!m) return { error: line.trim() + ': row not read. Use PNL-4MM-36x24-30K-E3.' };
+    if (!m) return { error: line.trim() + ': invalid row. Build it like PNL-4MM-36x24-30K-E3.' };
     var w = +m[2], hgt = +m[3], ex = +m[5];
     if (!EXITS[ex]) return { error: line.trim() + ': wire exit must be 1 to 8.' };
     if (w <= 0 || hgt <= 0 || w > 400 || hgt > 400) return { error: line.trim() + ': size is out of range.' };
@@ -352,16 +362,24 @@ button.ghost { background: transparent; color: var(--pine); }
 
   if (typeof module !== 'undefined' && module.exports) { module.exports = { buildSubmittal: buildSubmittal, buildDiagrams: buildDiagrams, parsePanel: parsePanel, parseLine: parseLine }; return; }
 
-  function wire(prefix, sample, fn) {
+  function wire(prefix, sample, fn, label) {
     var input = document.getElementById(prefix + '-in'), out = document.getElementById(prefix + '-out'), status = document.getElementById(prefix + '-status');
-    function run() { var r = fn(input.value); out.innerHTML = r.html; status.textContent = r.status; }
+    var printBtn = document.getElementById(prefix + '-print');
+    function clear(msg) { out.innerHTML = ''; status.textContent = msg; if (printBtn) printBtn.hidden = true; }
+    function run() {
+      var r = fn(input.value);
+      out.innerHTML = r.html; status.textContent = r.status;
+      if (printBtn) printBtn.hidden = !r.html;
+      if (r.html) out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
     input.value = sample;
+    clear('Press ' + label + ' to see the result. Change a code to see what happens.');
     document.getElementById(prefix + '-go').addEventListener('click', run);
-    document.getElementById(prefix + '-reset').addEventListener('click', function () { input.value = sample; run(); });
-    run();
+    input.addEventListener('input', function () { clear('Changed. Press ' + label + ' to run it again.'); });
+    document.getElementById(prefix + '-reset').addEventListener('click', function () { input.value = sample; clear('Sample restored. Press ' + label + ' to run it.'); });
   }
-  wire('sub', SUB_SAMPLE, buildSubmittal);
-  wire('dia', DIA_SAMPLE, buildDiagrams);
+  wire('sub', SUB_SAMPLE, buildSubmittal, 'Build submittal');
+  wire('dia', DIA_SAMPLE, buildDiagrams, 'Draw diagrams');
   document.getElementById('sub-print').addEventListener('click', function () { window.print(); });
 })();
 </script>
